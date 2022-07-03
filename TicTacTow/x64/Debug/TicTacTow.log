@@ -1,4 +1,2 @@
 ﻿  Source.cpp
-E:\ex\c++\complex projects\TicTacToe\TicTacTow\Source.cpp(13,2): warning C4129: ' ': unrecognized character escape sequence
-E:\ex\c++\complex projects\TicTacToe\TicTacTow\Source.cpp(14,2): warning C4129: '=': unrecognized character escape sequence
   TicTacTow.vcxproj -> E:\ex\c++\complex projects\TicTacToe\TicTacTow\x64\Debug\TicTacTow.exe
