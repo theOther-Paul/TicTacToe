@@ -1,5 +1,5 @@
 ﻿  TicTacToe.cpp
 E:\ex\c++\complex projects\newTicTacToe\TicTacToe\TextTable.h(105,28): warning C4267: 'return': conversion from 'size_t' to 'unsigned int', possible loss of data
 E:\ex\c++\complex projects\newTicTacToe\TicTacToe\TextTable.h(108,1): warning C4267: 'initializing': conversion from 'size_t' to 'unsigned int', possible loss of data
-E:\ex\c++\complex projects\newTicTacToe\TicTacToe\TicTacToe.cpp(54,12): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
+E:\ex\c++\complex projects\newTicTacToe\TicTacToe\TicTacToe.cpp(89,12): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
   TicTacToe.vcxproj -> E:\ex\c++\complex projects\newTicTacToe\TicTacToe\x64\Debug\TicTacToe.exe
