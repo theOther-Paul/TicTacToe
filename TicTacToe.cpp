@@ -59,30 +59,79 @@ public:
 	}
 };
 
-// function declaration
-void TitleDrop()
-{
-	fstream TitleD("ascii_art/titleDrop.txt");
-	if (!TitleD)
+//graphics structure
+struct GameGraphics {
+	void TitleDrop()
 	{
-		cout << "No file found" << endl;
-	}
-	else
-	{
-		string content;
-		if (TitleD.is_open())
+		fstream TitleD("ascii_art/titleDrop.txt");
+		if (!TitleD)
 		{
-			while (TitleD.good())
-			{
-				content = TitleD.get();
-				cout << content;
-			}
-			TitleD.close();
+			cout << "No file found" << endl;
 		}
 		else
-			cout << "Error";
+		{
+			string content;
+			if (TitleD.is_open())
+			{
+				while (TitleD.good())
+				{
+					content = TitleD.get();
+					cout << content;
+				}
+				TitleD.close();
+			}
+			else
+				cout << "Error";
+		}
 	}
-}
+
+	void p1win() {
+		fstream p1("ascii_art/P1won.txt");
+		if (!p1) {
+			cout << "Failed to load resource" << endl;
+		}
+
+		else
+		{
+			string content;
+			if (p1.is_open())
+			{
+				while (p1.good())
+				{
+					content = p1.get();
+					cout << content;
+				}
+				p1.close();
+			}
+			else cout << "Error";
+		}
+	}
+
+	void p2win() {
+		fstream p2("ascii_art/p2won.txt");
+		if (!p2) {
+			cout << "Failed to load resource" << endl;
+		}
+
+		else
+		{
+			string content;
+			if (p2.is_open())
+			{
+				while (p2.good())
+				{
+					content = p2.get();
+					cout << content;
+				}
+				p2.close();
+			}
+			else cout << "Error";
+		}
+	}
+};
+
+// function declaration
+
 
 void DiceRoll()
 {
@@ -169,9 +218,12 @@ void BeginPlay()
 				DisplayBoardWPHolders(boardValues);
 			}
 		}
+
 		else if (uc == 'O')
 		{
-			cout << "work in progress" << endl;
+			cout << "*********************" << endl;
+			cout << "Work in progress..." << endl;
+			cout << "*********************" << endl;
 			//to be implemented ofter the X variant
 		}
 	} while (uc != 'X' || uc != 'O');
