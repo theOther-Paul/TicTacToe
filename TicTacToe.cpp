@@ -256,6 +256,7 @@ void BeginPlay()
 				DisplayBoardWPHolders(boardValues);
 			}
 		}
+
 		else if (uc == 'O')
 		{
 			cout << "*********************" << endl;
