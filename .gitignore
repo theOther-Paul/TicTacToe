@@ -5,3 +5,5 @@ x64/
 tempCodeRunnerFile.cpp
 *.exe
 *.sln
+*.vs
+*.vscode
