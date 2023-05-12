@@ -6,11 +6,16 @@
 #include <vector>
 #include <thread>
 #include <chrono>
+#include <cctype>
+#include <random>
 
 using namespace std;
+using u32 = uint_least32_t;
+using engine = std::mt19937;
 
 // global variables
 vector<string> boardValues(10);
+bool locked = false;
 //***************************************************************************************************************************************************************************************
 //										Design sheet
 // create the environment, in this case, the board with input placeholders [x]
@@ -167,14 +172,53 @@ protected:
 		}
 	}
 
+private:
+	void MachineInput(string machineSymbol)
+	{
+		std::random_device os_seed;
+		const u32 seed = os_seed();
+		engine generator(seed);
+		std::uniform_int_distribution<u32> distribute(1, 9);
+
+		cout << "CPU will now move";
+
+	generateInput:
+		for (int repetition = 0; repetition < 1; ++repetition)
+		{
+			if (locked)
+				goto generateInput;
+			else
+			{
+				UpdateBoard(boardValues, distribute(generator), machineSymbol);
+				cout << endl;
+				cout << "Thinking..." << endl;
+				cout << "[";
+				for (int i = 0; i <= 6; i++)
+				{
+					cout << "===";
+					srand(static_cast<unsigned int>(time(0)));
+					unsigned int pause = rand() % 5000;
+					this_thread::sleep_for(chrono::milliseconds(pause));
+				}
+				cout << "]" << endl;
+				DisplayBoardWPHolders(boardValues);
+			}
+		}
+	}
+
+	void CheckWinner()
+	{
+	}
+
+protected:
 	void BeginPlay()
 	{
-		GameGraphics::TitleDrop();
-		this_thread::sleep_for(chrono::milliseconds(3000));
-		system("cls");
+		// GameGraphics::TitleDrop();
+		// this_thread::sleep_for(chrono::milliseconds(3000));
+		// system("cls");
 		FillBoard(boardValues, " ");
 		cout << "To see who goes first, let's roll a dice:" << endl;
-		DiceRoll();
+		DiceRoll(); // need to stop p1 from choosing a symbol if it loses the dice roll
 		cout << "Choose your symbol: ";
 		char uc;
 		do
@@ -189,8 +233,14 @@ protected:
 					int PlayerPosition;
 					cout << "Your move: ";
 					cin >> PlayerPosition;
-					UpdateBoard(boardValues, PlayerPosition, " X ");
-					DisplayBoardWPHolders(boardValues);
+					if (boardValues[PlayerPosition] == '\0') // TODO: fix error here before continuing
+					{
+						locked = true;
+
+						UpdateBoard(boardValues, PlayerPosition, " X ");
+						DisplayBoardWPHolders(boardValues);
+						MachineInput("O");
+					}
 				}
 			}
 
@@ -300,8 +350,6 @@ public:
 		} while (PlayerChoice < 1 || PlayerChoice > 5);
 	}
 };
-
-// function declaration
 
 // main function and testing ground
 int main()
