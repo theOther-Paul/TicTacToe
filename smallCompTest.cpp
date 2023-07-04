@@ -117,6 +117,9 @@ secround:
 	return 0;
 }
 
+/**
+ * The function "resetGame" resets the values of the "board" array to 0.
+ */
 void resetGame()
 {
 	for (int i = 0; i < 9; i++)

@@ -57,6 +57,10 @@ protected:
 		}
 	}
 
+	/**
+	 * The function "p1win" reads and prints the content of a file containing ASCII art representing a
+	 * victory message for player 1.
+	 */
 	void p1win()
 	{
 		fstream p1("ascii_art/P1won.txt");
@@ -109,9 +113,15 @@ protected:
 };
 
 // game mechanics implementation
+/* The GameMechanics class contains functions for simulating dice rolls, filling and updating a game
+board, displaying the board, and handling player and machine inputs in a game. */
 class GameMechanics : protected GameGraphics
 {
 protected:
+	/**
+	 * The function "DiceRoll" simulates rolling two dice and determines which player will go first based
+	 * on the results.
+	 */
 	void DiceRoll()
 	{
 		int max = 6;
@@ -141,11 +151,25 @@ protected:
 		}
 	}
 
+	/**
+	 * The function FillBoard fills a vector of strings with a specified value.
+	 *
+	 * @param boardValues A vector of strings representing the board values.
+	 * @param value The value is a string that will be used to fill the elements of the boardValues vector.
+	 *
+	 * @return the result of the `fill` function, which is not specified in the given code.
+	 */
 	void FillBoard(vector<string> &boardValues, string value)
 	{
 		return (fill(boardValues.begin(), boardValues.end() - 1, value));
 	}
 
+	/**
+	 * The function `DisplayBoardWPHolders` takes a vector of strings representing a board and displays it
+	 * in a formatted table.
+	 *
+	 * @param boardValues A vector of strings representing the values to be displayed on the game board.
+	 */
 	void DisplayBoardWPHolders(vector<string> boardValues)
 	{
 		TextTable board('-', '|', '+');
@@ -161,6 +185,14 @@ protected:
 		cout << board;
 	}
 
+	/**
+	 * The function `UpdateBoard` updates a specific position on a board with a given value.
+	 *
+	 * @param boardValues A vector of strings representing the current state of the board.
+	 * @param position The position parameter is an integer that represents the index of the element in
+	 * the boardValues vector that needs to be updated.
+	 * @param value The value parameter is the string value that you want to update the board with.
+	 */
 	void UpdateBoard(vector<string> &boardValues, int position, string value)
 	{
 		for (int i = 0; i <= boardValues.size() - 1; i++)
@@ -173,6 +205,13 @@ protected:
 	}
 
 private:
+	/**
+	 * The function `MachineInput` generates a random number and uses it to update the game board with the
+	 * given machine symbol, while also displaying a thinking animation.
+	 *
+	 * @param machineSymbol The parameter `machineSymbol` is a string that represents the symbol used by
+	 * the machine player in a game. It is used to update the game board with the machine player's move.
+	 */
 	void MachineInput(string machineSymbol)
 	{
 		std::random_device os_seed;
@@ -257,10 +296,14 @@ protected:
 	}
 };
 
-// menu class implementation
+/* The MenuClass is a class that displays a menu and allows the user to choose different options. */
 class MenuClass : protected GameMechanics
 {
 public:
+	/**
+	 * The function ShowRules reads and displays the content of a file named "rules.txt" in ASCII art
+	 * format.
+	 */
 	static void ShowRules()
 	{
 		fstream rules("ascii_art/rules.txt");
