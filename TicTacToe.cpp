@@ -128,7 +128,7 @@ protected:
 	 * The function "DiceRoll" simulates rolling two dice and determines which player will go first based
 	 * on the results.
 	 */
-	void DiceRoll()
+	int DiceRoll()
 	{
 		int max = 6;
 		srand(time(0));
@@ -136,6 +136,10 @@ protected:
 		cout << endl;
 		auto rollOne = rand() % max;
 		auto rollTwo = rand() % max;
+
+		cout << endl;
+		cout << "Gethering results" << endl;
+
 		std::this_thread::sleep_for(std::chrono::milliseconds(3000));
 		cout << "P1 roll is : " << rollOne << endl;
 		cout << "P2 roll is : " << rollTwo << endl;
@@ -150,10 +154,14 @@ protected:
 			if (rollOne > rollTwo)
 			{
 				cout << "P1 will go first" << endl;
+				return rollOne;
 			}
 
 			else
+			{
 				cout << "P2 will go first" << endl;
+				return rollTwo;
+			}
 		}
 	}
 
@@ -201,7 +209,7 @@ protected:
 	 */
 	void UpdateBoard(vector<string> &boardValues, int position, string value)
 	{
-		for (int i = 0; i <= boardValues.size() - 1; i++)
+		for (int i = 0; i < boardValues.size(); i++)
 		{
 			if (i == position)
 			{
@@ -218,39 +226,44 @@ private:
 	 * @param machineSymbol The parameter `machineSymbol` is a string that represents the symbol used by
 	 * the machine player in a game. It is used to update the game board with the machine player's move.
 	 */
+	int RandomSleepingMachine(int minDur, int maxDur)
+	{
+		std::random_device rd;
+		std::mt19937 gen(rd());
+
+		std::uniform_int_distribution<int> distribution(minDur, maxDur);
+
+		int sleepDuration = distribution(gen);
+
+		return sleepDuration;
+	}
 	void MachineInput(string machineSymbol)
 	{
 		std::random_device os_seed;
 		const u32 seed = os_seed();
 		engine generator(seed);
-		std::uniform_int_distribution<u32> distribute(1, 9);
+		std::uniform_int_distribution<u32> distribute(0, 8);
 
 		cout << "CPU will now move";
 
 	generateInput:
 		for (int repetition = 0; repetition < 1; ++repetition)
 		{
-			if (locked)
-				goto generateInput;
-			else
+			int position = distribute(generator); // Generate a random position
+			UpdateBoard(boardValues, position, machineSymbol);
+			cout << endl;
+			cout << "Thinking..." << endl;
+			cout << "[";
+			for (int i = 0; i <= 6; i++)
 			{
-				UpdateBoard(boardValues, distribute(generator), machineSymbol);
-				cout << endl;
-				cout << "Thinking..." << endl;
-				cout << "[";
-				for (int i = 0; i <= 6; i++)
-				{
-					cout << "===";
-					srand(static_cast<unsigned int>(time(0)));
-					unsigned int pause = rand() % 5000;
-					std::this_thread::sleep_for(std::chrono::milliseconds(pause));
-				}
-				cout << "]" << endl;
-				DisplayBoardWPHolders(boardValues);
+				cout << "===";
+				int rsm = RandomSleepingMachine(500, 3000);
+				std::this_thread::sleep_for(std::chrono::milliseconds(rsm));
 			}
+			cout << "]" << endl;
+			DisplayBoardWPHolders(boardValues);
 		}
 	}
-
 	void CheckWinner()
 	{
 	}
@@ -263,7 +276,8 @@ protected:
 		// system("cls");
 		FillBoard(boardValues, " ");
 		cout << "To see who goes first, let's roll a dice:" << endl;
-		DiceRoll(); // need to stop p1 from choosing a symbol if it loses the dice roll
+		int to_start = DiceRoll();
+
 		cout << "Choose your symbol: ";
 		char uc;
 		do
@@ -280,7 +294,7 @@ protected:
 					cin >> PlayerPosition;
 					if (boardValues[PlayerPosition] == " ")
 					{
-						locked = true;
+						// locked = true;
 
 						UpdateBoard(boardValues, PlayerPosition, " X ");
 						DisplayBoardWPHolders(boardValues);
@@ -400,11 +414,44 @@ public:
 	}
 };
 
+int max_of_two(int a, int b) { return a > b ? a : b; }
+
+int max_of_two_bool(int a, int b) { return a > b ? true : false; }
+
+// testing area
+int DiceRoll(string firstPlayer, string secondPlayer){}
+{
+	int max = 6;
+	srand(time(0));
+	cout << "The dice is rolling" << endl;
+	cout << endl;
+	auto rollOne = rand() % max;
+	auto rollTwo = rand() % max;
+
+	cout << endl;
+	cout << "Gethering results" << endl;
+
+	std::this_thread::sleep_for(std::chrono::milliseconds(3000));
+	cout << "P1 roll is : " << rollOne << endl;
+	cout << "P2 roll is : " << rollTwo << endl;
+
+	if (rollOne == rollTwo)
+	{
+		DiceRoll();
+	}
+
+	else
+	{
+		return max_of_two_bool(rollOne, rollTwo);
+	}
+}
+
 // main function and testing ground
 int main()
 {
-	MenuClass MainMenu;
-	MainMenu.DisplayMenu();
-	MainMenu.OptionChoice();
+	// MenuClass MainMenu;
+	// MainMenu.DisplayMenu();
+	// MainMenu.OptionChoice();
+	cout << DiceRoll();
 	return 0;
 }
