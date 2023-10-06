@@ -9,7 +9,13 @@
 #include <cctype>
 #include <random>
 
-using namespace std;
+using std::cin;
+using std::cout;
+using std::endl;
+using std::fstream;
+using std::string;
+using std::thread;
+using std::vector;
 using u32 = uint_least32_t;
 using engine = std::mt19937;
 
@@ -130,7 +136,7 @@ protected:
 		cout << endl;
 		auto rollOne = rand() % max;
 		auto rollTwo = rand() % max;
-		this_thread::sleep_for(chrono::milliseconds(3000));
+		std::this_thread::sleep_for(std::chrono::milliseconds(3000));
 		cout << "P1 roll is : " << rollOne << endl;
 		cout << "P2 roll is : " << rollTwo << endl;
 
@@ -237,7 +243,7 @@ private:
 					cout << "===";
 					srand(static_cast<unsigned int>(time(0)));
 					unsigned int pause = rand() % 5000;
-					this_thread::sleep_for(chrono::milliseconds(pause));
+					std::this_thread::sleep_for(std::chrono::milliseconds(pause));
 				}
 				cout << "]" << endl;
 				DisplayBoardWPHolders(boardValues);
@@ -253,7 +259,7 @@ protected:
 	void BeginPlay()
 	{
 		// GameGraphics::TitleDrop();
-		// this_thread::sleep_for(chrono::milliseconds(3000));
+		// std::this_thread::sleep_for(std::chrono::milliseconds(3000));
 		// system("cls");
 		FillBoard(boardValues, " ");
 		cout << "To see who goes first, let's roll a dice:" << endl;
@@ -272,7 +278,7 @@ protected:
 					int PlayerPosition;
 					cout << "Your move: ";
 					cin >> PlayerPosition;
-					if (boardValues[PlayerPosition] == '\0') // TODO: fix error here before continuing
+					if (boardValues[PlayerPosition] == " ")
 					{
 						locked = true;
 
@@ -371,7 +377,7 @@ public:
 					system("cls");
 					MenuClass::ShowRules();
 					cout << "\n You will be returned to the main menu in 5 seconds";
-					this_thread::sleep_for(chrono::milliseconds(5000));
+					std::this_thread::sleep_for(std::chrono::milliseconds(5000));
 					this->DisplayMenu();
 					OptionChoice();
 				case 2:
@@ -400,6 +406,5 @@ int main()
 	MenuClass MainMenu;
 	MainMenu.DisplayMenu();
 	MainMenu.OptionChoice();
-
 	return 0;
 }
