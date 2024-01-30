@@ -7,6 +7,7 @@
 #include <random>
 #include <algorithm>
 #include "GameGraphics.h"
+#include <string>
 
 using std::cin;
 using std::cout;
@@ -65,7 +66,7 @@ protected:
         auto rollTwo = rand() % max;
 
         cout << endl;
-        cout << "Gethering results" << endl;
+        cout << "Gathering results" << endl;
 
         std::this_thread::sleep_for(std::chrono::milliseconds(3000));
         cout << "P1 roll is : " << rollOne << endl;
@@ -181,11 +182,42 @@ private:
             DisplayBoardWPHolders(boardValues);
         }
     }
-    void CheckWinner()
+
+protected:
+    bool hasConsecutiveChar(vector<string> boardValues, char played_char, size_t position1, size_t position2, size_t position3)
+    {
+        for (const std::string &sequence : boardValues)
+        {
+            if (position3 < sequence.length() &&
+                sequence[position1] == played_char &&
+                sequence[position2] == played_char &&
+                sequence[position3] == played_char)
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    void GameOver()
     {
     }
 
-protected:
+    bool CheckWinner(vector<string> boardValues, char played_char)
+    {
+        if (hasConsecutiveChar(boardValues, played_char, 0, 1, 2) || hasConsecutiveChar(boardValues, played_char, 3, 4, 5) || hasConsecutiveChar(boardValues, played_char, 6, 7, 8))
+            return true;
+        else if (hasConsecutiveChar(boardValues, played_char, 0, 3, 6) || hasConsecutiveChar(boardValues, played_char, 1, 4, 7) || hasConsecutiveChar(boardValues, played_char, 2, 5, 8))
+            return true;
+        else
+        {
+            if (hasConsecutiveChar(boardValues, played_char, 0, 4, 8) || hasConsecutiveChar(boardValues, played_char, 2, 4, 6))
+                return true;
+            else
+                return false;
+        }
+    }
+
     void BeginPlay()
     {
         // GameGraphics::TitleDrop();
@@ -216,7 +248,7 @@ protected:
 
                             UpdateBoard(boardValues, PlayerPosition, " X ");
                             DisplayBoardWPHolders(boardValues);
-                            MachineInput("O");
+                            MachineInput(" O ");
                         }
                     }
                 }
