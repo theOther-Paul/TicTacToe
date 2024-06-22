@@ -22,5 +22,7 @@ bool hasConsecutiveChar(vector<string> boardValues, char played_char, size_t pos
 int main()
 {
     vector<string> bv(10, "x0xxxx000");
-    cout << hasConsecutiveChar(bv, '0', 6, 7, 8);
+    if(hasConsecutiveChar(bv, '0', 6,7,8)==true){
+        cout<<"Winner";
+    }
 }

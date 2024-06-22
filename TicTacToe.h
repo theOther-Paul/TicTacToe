@@ -9,7 +9,6 @@
 #include <cctype>
 #include <random>
 #include <algorithm>
-// #include "headers/GameGraphics.h"
 #include "headers/GameMechanics.h"
 
 using std::cin;
@@ -101,7 +100,7 @@ public:
         {
             cout << "Awaiting your choice: ";
             cin >> PlayerChoice;
-            if (PlayerChoice < 1 && PlayerChoice > 5)
+            if (PlayerChoice < 1 || PlayerChoice > 5)
                 cout << "Invalid choice! Please try again" << endl;
             else
             {
@@ -113,19 +112,20 @@ public:
                     cout << "\n You will be returned to the main menu in 5 seconds";
                     std::this_thread::sleep_for(std::chrono::milliseconds(5000));
                     this->DisplayMenu();
-                    OptionChoice();
+                    break;
                 case 2:
                     cout << "This section is still a work in progress!";
                     cout << "\n You will be returned to the main menu";
                     DisplayMenu();
-                    OptionChoice();
+                    break;
                 case 3:
                     GameMechanics::BeginPlay();
+                    break;
                 case 4:
                     cout << "This section is still a work in progress!";
                     cout << "\n You will be returned to the main menu";
                     DisplayMenu();
-                    OptionChoice();
+                    break;
                 default:
                     break;
                 }

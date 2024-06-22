@@ -26,24 +26,16 @@ int max_of_two(int a, int b) { return a > b ? a : b; }
 
 int max_of_two_bool(int a, int b) { return a > b ? true : false; }
 
-bool checkLegal(int position, string playerSymbol)
+template <typename T>
+bool checkLegal(int position, T playerSymbol)
 {
-    for (int i = 0; i < boardValues.size(); i++)
-    {
-        if (i == position)
-        {
-            if (boardValues[i] == playerSymbol)
-                return false;
-            else
-            {
-                if (boardValues[i] != playerSymbol)
-                    return false;
-                else
-                    return true;
-            }
-        }
-    }
-    return EXIT_SUCCESS;
+    if (position < 0 || position >= boardValues.size())
+        return false; // Out of bounds check
+
+    if (boardValues[position] == " ")
+        return true; // Empty position is valid
+
+    return false; // Any other case is invalid
 }
 
 // game mechanics implementation
@@ -154,33 +146,38 @@ private:
     }
     void MachineInput(string machineSymbol)
     {
-        std::random_device os_seed;
-        const u32 seed = os_seed();
-        engine generator(seed);
-        std::uniform_int_distribution<u32> distribute(0, 8);
+    std::random_device os_seed;
+    const uint32_t seed = os_seed();
+    std::mt19937 generator(seed); // Using std::mt19937 as the random number engine
+    std::uniform_int_distribution<int> distribute(0, boardValues.size() - 1); // Adjust distribution to board size
 
-        cout << endl;
-        cout << "CPU will now move";
+    cout << endl;
+    cout << "CPU will now move";
+    cout << endl;
 
-    generateInput:
-        for (int repetition = 0; repetition < 1; ++repetition)
+    int position;
+    bool validMove = false;
+    while (!validMove)
+    {
+        position = distribute(generator); // Generate a random position
+        if (checkLegal(position, machineSymbol))
         {
-            int position = distribute(generator); // Generate a random position
-            if (checkLegal(position, machineSymbol))
-                cout << endl;
-            cout << "Thinking..." << endl;
-            cout << "[";
-            for (int i = 0; i <= 6; i++)
-            {
-                cout << "===";
-                int rsm = RandomSleepingMachine(500, 3000);
-                std::this_thread::sleep_for(std::chrono::milliseconds(rsm));
-            }
-            cout << "]" << endl;
-
-            UpdateBoard(boardValues, position, machineSymbol);
-            DisplayBoardWPHolders(boardValues);
+            validMove = true;
         }
+    }
+
+    cout << "Thinking..." << endl;
+    cout << "[";
+    for (int i = 0; i <= 6; i++)
+    {
+        cout << "===";
+        int rsm = RandomSleepingMachine(500, 3000);
+        std::this_thread::sleep_for(std::chrono::milliseconds(rsm));
+    }
+    cout << "]" << endl;
+
+    UpdateBoard(boardValues, position, machineSymbol);
+    DisplayBoardWPHolders(boardValues);
     }
 
 protected:
@@ -201,6 +198,7 @@ protected:
 
     void GameOver()
     {
+        
     }
 
     bool CheckWinner(vector<string> boardValues, char played_char)
@@ -227,48 +225,77 @@ protected:
         cout << "To see who goes first, let's roll a dice:" << endl;
 
         if (DiceRoll() == true)
-        {
-            cout << "Choose your symbol: ";
-            char uc;
-            do
-            {
-                cin >> uc;
-                uc = uc - 32;
-                if (uc == 'X')
-                {
-                    cout << "You will move first!" << endl;
-                    while (true)
-                    {
-                        int PlayerPosition;
-                        cout << "Your move: ";
-                        cin >> PlayerPosition;
-                        if (boardValues[PlayerPosition] == " ")
-                        {
-                            // locked = true;
+    {
+        cout << "You will move first!" << endl;
+        cout << "Choose your symbol: ";
+        char uc;
+        cin >> uc;
+        uc = toupper(uc);  // Convert to uppercase to handle both 'x' and 'o'
 
-                            UpdateBoard(boardValues, PlayerPosition, " X ");
-                            DisplayBoardWPHolders(boardValues);
-                            MachineInput(" O ");
+        if (uc == 'X' || uc == 'O')
+        {
+            string playerSymbol = " ";
+            string machineSymbol = " ";
+            if (uc == 'X')
+            {
+                playerSymbol = " X ";
+                machineSymbol = " O ";
+            }
+            else if (uc == 'O')
+            {
+                playerSymbol = " O ";
+                machineSymbol = " X ";
+            }
+
+            bool gameOngoing = true;
+            while (gameOngoing)
+            {
+                // Player's move
+                while (true)
+                {
+                    int PlayerPosition;
+                    cout << "Your move: ";
+                    cin >> PlayerPosition;
+                    if (checkLegal(PlayerPosition, playerSymbol))
+                    {
+                        UpdateBoard(boardValues, PlayerPosition, playerSymbol);
+                        DisplayBoardWPHolders(boardValues);
+                        if (CheckWinCondition(boardValues, playerSymbol))
+                        {
+                            cout << "You win!" << endl;
+                            gameOngoing = false;
+                            break;
                         }
+                        break;
+                    }
+                    else
+                    {
+                        cout << "This move is invalid! Please choose another move" << endl;
                     }
                 }
 
-                else if (uc == 'O')
+                if (!gameOngoing) break;
+
+                // Machine's move
+                MachineInput(machineSymbol);
+                DisplayBoardWPHolders(boardValues);
+                if (CheckWinCondition(boardValues, machineSymbol))
                 {
-                    cout << "*********************" << endl;
-                    cout << "Work in progress..." << endl;
-                    cout << "*********************" << endl;
-                    // to be implemented after the X variant
+                    cout << "Machine wins!" << endl;
+                    gameOngoing = false;
                 }
-            } while (uc != 'X' || uc != 'O');
+            }
         }
         else
         {
-            cout << "*********************" << endl;
-            cout << "Work in progress..." << endl;
-            cout << "*********************" << endl;
-            // to be implemented after the X / 0 variant
+            cout << "Invalid symbol! Please restart the game and choose either 'X' or 'O'." << endl;
         }
+    }
+    else
+    {
+        cout << "Dice roll indicates the machine goes first!" << endl;
+        // Similar logic for when the machine starts first
+    }
 
         DisplayBoardWPHolders(boardValues);
     }
