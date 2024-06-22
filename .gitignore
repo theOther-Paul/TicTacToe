@@ -9,3 +9,4 @@ tempCodeRunnerFile.cpp
 *.vscode
 smallCompTest.cpp
 testing.cpp
+output/
