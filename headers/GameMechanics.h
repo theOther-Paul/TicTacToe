@@ -82,7 +82,7 @@ protected:
      */
     void FillBoard(vector<string> &boardValues, string value)
     {
-        return (fill(boardValues.begin(), boardValues.end() - 1, value));
+        fill(boardValues.begin(), boardValues.end(), value);
     }
 
     /**
@@ -181,39 +181,38 @@ private:
     }
 
 protected:
-    bool hasConsecutiveChar(vector<string> boardValues, char played_char, size_t position1, size_t position2, size_t position3)
-    {
-        for (const std::string &sequence : boardValues)
-        {
-            if (position3 < sequence.length() &&
-                sequence[position1] == played_char &&
-                sequence[position2] == played_char &&
-                sequence[position3] == played_char)
-            {
-                return true;
-            }
-        }
-        return false;
-    }
+    bool hasConsecutiveChar(const std::vector<std::string>& boardValues, const std::string& played_char, size_t position1, size_t position2, size_t position3)
+{
+    return (boardValues[position1] == played_char &&
+            boardValues[position2] == played_char &&
+            boardValues[position3] == played_char);
+}
 
     void GameOver()
     {
         
     }
 
-    bool CheckWinner(vector<string> boardValues, char played_char)
+    bool CheckWinner(const std::vector<std::string>& boardValues, const std::string& played_char)
     {
-        if (hasConsecutiveChar(boardValues, played_char, 0, 1, 2) || hasConsecutiveChar(boardValues, played_char, 3, 4, 5) || hasConsecutiveChar(boardValues, played_char, 6, 7, 8))
+        // Check rows
+        if (hasConsecutiveChar(boardValues, played_char, 0, 1, 2) || 
+            hasConsecutiveChar(boardValues, played_char, 3, 4, 5) || 
+            hasConsecutiveChar(boardValues, played_char, 6, 7, 8))
             return true;
-        else if (hasConsecutiveChar(boardValues, played_char, 0, 3, 6) || hasConsecutiveChar(boardValues, played_char, 1, 4, 7) || hasConsecutiveChar(boardValues, played_char, 2, 5, 8))
+
+        // Check columns
+        if (hasConsecutiveChar(boardValues, played_char, 0, 3, 6) || 
+            hasConsecutiveChar(boardValues, played_char, 1, 4, 7) || 
+            hasConsecutiveChar(boardValues, played_char, 2, 5, 8))
             return true;
-        else
-        {
-            if (hasConsecutiveChar(boardValues, played_char, 0, 4, 8) || hasConsecutiveChar(boardValues, played_char, 2, 4, 6))
-                return true;
-            else
-                return false;
-        }
+
+        // Check diagonals
+        if (hasConsecutiveChar(boardValues, played_char, 0, 4, 8) || 
+            hasConsecutiveChar(boardValues, played_char, 2, 4, 6))
+            return true;
+
+        return false;
     }
 
     void BeginPlay()
@@ -222,9 +221,9 @@ protected:
         // std::this_thread::sleep_for(std::chrono::milliseconds(3000));
         // system("cls");
         FillBoard(boardValues, " ");
-        cout << "To see who goes first, let's roll a dice:" << endl;
+    cout << "To see who goes first, let's roll a dice:" << endl;
 
-        if (DiceRoll() == true)
+    if (DiceRoll() == true)
     {
         cout << "You will move first!" << endl;
         cout << "Choose your symbol: ";
@@ -234,18 +233,8 @@ protected:
 
         if (uc == 'X' || uc == 'O')
         {
-            string playerSymbol = " ";
-            string machineSymbol = " ";
-            if (uc == 'X')
-            {
-                playerSymbol = " X ";
-                machineSymbol = " O ";
-            }
-            else if (uc == 'O')
-            {
-                playerSymbol = " O ";
-                machineSymbol = " X ";
-            }
+            string playerSymbol = (uc == 'X') ? " X " : " O ";
+            string machineSymbol = (uc == 'X') ? " O " : " X ";
 
             bool gameOngoing = true;
             while (gameOngoing)
@@ -260,11 +249,11 @@ protected:
                     {
                         UpdateBoard(boardValues, PlayerPosition, playerSymbol);
                         DisplayBoardWPHolders(boardValues);
-                        if (CheckWinCondition(boardValues, playerSymbol))
+                        if (CheckWinner(boardValues, playerSymbol))
                         {
                             cout << "You win!" << endl;
                             gameOngoing = false;
-                            break;
+                            break
                         }
                         break;
                     }
@@ -279,7 +268,7 @@ protected:
                 // Machine's move
                 MachineInput(machineSymbol);
                 DisplayBoardWPHolders(boardValues);
-                if (CheckWinCondition(boardValues, machineSymbol))
+                if (CheckWinner(boardValues, machineSymbol))
                 {
                     cout << "Machine wins!" << endl;
                     gameOngoing = false;
